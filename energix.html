@@ -82,15 +82,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-        }
-
-        .btn-img {
-            background-color: #6a5acd;
-            color: white;
-        }
-
-        .btn-pdf {
-            background-color: #ff4500;
+            background-color: #c2b5e0;
             color: white;
         }
     </style>
@@ -114,8 +106,9 @@
 </div>
 
 <div class="buttons">
-    <button class="btn-img" onclick="exportToImage()">Exportar como Imagem</button>
-    <button class="btn-pdf" onclick="exportToPDF()">Exportar como PDF</button>
+    <button onclick="exportToImage()">Exportar como Imagem</button>
+    <button onclick="exportToPDF()">Exportar como PDF</button>
+    <button onclick="limparTabela()">Limpar</button>
 </div>
 
 <script>
@@ -196,6 +189,19 @@
             pdf.addImage(imgData, "PNG", 15, 10, imgWidth, imgHeight);
             pdf.save("medidor-de-energia.pdf");
         });
+    }
+
+    function limparTabela() {
+        for (let i = 1; i <= numLinhas; i++) {
+            localStorage.removeItem(`tarefa-${i}`);
+            localStorage.removeItem(`energia-${i}`);
+            
+            document.getElementById(`tarefa-${i}`).value = "";
+            let radios = document.getElementsByName(`energia-${i}`);
+            for (let radio of radios) {
+                radio.checked = false;
+            }
+        }
     }
 
     criarTabela();
