@@ -15,7 +15,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            /* height: 100vh; */
         }
 
         .container {
@@ -85,6 +85,15 @@
             background-color: #c2b5e0;
             color: white;
         }
+
+        .info-box {
+            margin-top: 20px;
+            background: #e6e1f0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +118,17 @@
     <button onclick="exportToImage()">Exportar como Imagem</button>
     <button onclick="exportToPDF()">Exportar como PDF</button>
     <button onclick="limparTabela()">Limpar</button>
+</div>
+
+<div class="info-box">
+    <strong>🥄 Classificação de Colheres</strong>
+    <p><strong>🥄 (1 ou 2)</strong> Tarefas que exigem pouca energia: São atividades como acordar, levantar da cama, beber água. Elas podem ser realizadas sem exigir pressão ou pressa.</p>
+    <p><strong>🥄 (3)</strong> Tarefas intermediárias: Tarefas de média intensidade, que podem ser feitas em momentos de energia moderada, como responder e-mails, organizar o espaço ou realizar tarefas rotineiras sem grande demanda emocional.</p>
+    <p><strong>🥄 (4)</strong> Tarefas que exigem muita energia: São aquelas que demandam um esforço significativo e devem ser realizadas em momentos de maior disposição. Exemplos: trabalho intenso, compromissos sociais ou tarefas que envolvem grande concentração.</p>
+    <strong>📌 Estabelecimento de Prioridades:</strong>
+    <p>O medidor pode te ajudar a priorizar tarefas de acordo com seu nível de energia ao longo do dia. O foco deve ser cumprir pelo menos uma tarefa para evitar sobrecarga. Para tarefas de alta energia, peça ajuda às pessoas do seu plano de segurança.</p>
+    <strong>📝 Dica Adicional:</strong>
+    <p>Inclua uma tarefa de cuidado pessoal no início ou no final do dia, como ouvir música ou tomar um banho relaxante. Essas atividades ajudam a restaurar a energia emocional para continuar o dia sem sobrecarga.</p>
 </div>
 
 <script>
