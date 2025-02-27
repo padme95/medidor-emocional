@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medidor de Energia</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .titulo {
+            background-color: #c2b5e0;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #c2b5e0;
+            color: white;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .emoji {
+            font-size: 18px;
+        }
+
+        input[type="radio"] {
+            transform: scale(1.2);
+        }
+
+        .buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-img {
+            background-color: #6a5acd;
+            color: white;
+        }
+
+        .btn-pdf {
+            background-color: #ff4500;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="export-content">
+    <div class="titulo">MEDIDOR DE ENERGIA PARA TAREFAS DIÁRIAS</div>
+    <table>
+        <thead>
+            <tr>
+                <th>TAREFAS</th>
+                <th class="emoji">🥄</th>
+                <th class="emoji">🥄🥄</th>
+                <th class="emoji">🥄🥄🥄</th>
+                <th class="emoji">🥄🥄🥄🥄</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-corpo"></tbody>
+    </table>
+</div>
+
+<div class="buttons">
+    <button class="btn-img" onclick="exportToImage()">Exportar como Imagem</button>
+    <button class="btn-pdf" onclick="exportToPDF()">Exportar como PDF</button>
+</div>
+
+<script>
+    const numLinhas = 6;
+
+    function criarTabela() {
+        const tabelaCorpo = document.getElementById("tabela-corpo");
+        tabelaCorpo.innerHTML = "";
+
+        for (let i = 1; i <= numLinhas; i++) {
+            let tr = document.createElement("tr");
+
+            let tdTarefa = document.createElement("td");
+            let inputTarefa = document.createElement("input");
+            inputTarefa.type = "text";
+            inputTarefa.placeholder = "Digite a tarefa";
+            inputTarefa.id = `tarefa-${i}`;
+            inputTarefa.value = localStorage.getItem(`tarefa-${i}`) || ""; 
+            inputTarefa.addEventListener("input", () => salvarDados());
+            tdTarefa.appendChild(inputTarefa);
+            tr.appendChild(tdTarefa);
+
+            for (let j = 1; j <= 4; j++) {
+                let tdColher = document.createElement("td");
+                let inputColher = document.createElement("input");
+                inputColher.type = "radio";
+                inputColher.name = `energia-${i}`;
+                inputColher.value = j;
+                inputColher.id = `energia-${i}-${j}`;
+
+                if (localStorage.getItem(`energia-${i}`) == j) {
+                    inputColher.checked = true;
+                }
+
+                inputColher.addEventListener("change", () => salvarDados());
+                tdColher.appendChild(inputColher);
+                tr.appendChild(tdColher);
+            }
+
+            tabelaCorpo.appendChild(tr);
+        }
+    }
+
+    function salvarDados() {
+        for (let i = 1; i <= numLinhas; i++) {
+            let tarefa = document.getElementById(`tarefa-${i}`).value;
+            localStorage.setItem(`tarefa-${i}`, tarefa);
+
+            let radios = document.getElementsByName(`energia-${i}`);
+            for (let radio of radios) {
+                if (radio.checked) {
+                    localStorage.setItem(`energia-${i}`, radio.value);
+                }
+            }
+        }
+    }
+
+    function exportToImage() {
+        const content = document.getElementById("export-content");
+        html2canvas(content, { scale: 2 }).then(canvas => {
+            let link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "medidor-de-energia.png";
+            link.click();
+        });
+    }
+
+    function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const content = document.getElementById("export-content");
+
+        html2canvas(content, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidth = 180;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 15, 10, imgWidth, imgHeight);
+            pdf.save("medidor-de-energia.pdf");
+        });
+    }
+
+    criarTabela();
+</script>
+
+</body>
+</html>
